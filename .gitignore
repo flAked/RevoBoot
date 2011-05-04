@@ -3,3 +3,5 @@ data-hp.h
 data-asus.h
 settings-hp.h
 setting-asus.h
+data.h
+settings.h
