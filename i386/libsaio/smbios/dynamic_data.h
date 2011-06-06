@@ -206,24 +206,31 @@ void setupSMBIOS(void)
 
 	*((uint16_t *)(((char *)newHeader) + 4)) = getCPUType();
 
+	// Update EPS
+	newEPS->dmi.tableLength += 8;
+	newEPS->dmi.structureCount++;
+
 	newtablesPtr += 8;
 
 	//------------------------------------------------------------------------------
-	// Add SMBOemProcessorBusSpeed structure.
+	// Add SMBOemProcessorBusSpeed structure (when we have something to inject).
 
-	newHeader = (struct SMBStructHeader *) newtablesPtr;
+	if (gPlatform.CPU.QPISpeed)
+	{
+		newHeader = (struct SMBStructHeader *) newtablesPtr;
 
-	newHeader->type		= kSMBTypeOemProcessorBusSpeed;
-	newHeader->length	= 6;
-	newHeader->handle	= ++handle;
+		newHeader->type		= kSMBTypeOemProcessorBusSpeed;
+		newHeader->length	= 6;
+		newHeader->handle	= ++handle;
 
-	*((uint16_t *)(((char *)newHeader) + 4)) = getQPISpeed();
+		*((uint16_t *)(((char *)newHeader) + 4)) = gPlatform.CPU.QPISpeed;
 
-	// Update EPS
-	newEPS->dmi.tableLength += 16;
-	newEPS->dmi.structureCount += 2;
+		// Update EPS
+		newEPS->dmi.tableLength += 8;
+		newEPS->dmi.structureCount++;
 
-	newtablesPtr += 8;
+		newtablesPtr += 8;
+	}
 
 #if DYNAMIC_RAM_OVERRIDE_SIZE || DYNAMIC_RAM_OVERRIDE_TYPE || DYNAMIC_RAM_OVERRIDE_FREQUENCY
 	requiredStructures[17].stop = (sizeof(SMBProperties) / sizeof(SMBProperties[0])) -1;

@@ -138,10 +138,6 @@
 
 #define DEBUG_BOOT							0	// Set to 0 by default. Change this to 1 when things don't seem to work for you.
 
-#define DEBUG_SWITCH						0	// Set to 0 by default. Change this to 1 when you need a debug switch for testing.
-
-#define DEBUG_SWITCH_DATA					"-v -allowAppleCPUPM" // add additional flags required to boot your system
-
 
 //---------------------------------------------------------------- CPU.C -------------------------------------------------------------------
 
