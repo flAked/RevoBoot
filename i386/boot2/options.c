@@ -85,9 +85,6 @@ void getAndProcessBootArguments(char * configKernelFlags)
 
 	int key;
 	int pressedKey			= 0;
-#if DEBUG_SWITCH
-	int debugSwitch			= 0;
-#endif
 	int cntRemaining		= BOOT_STRING_LEN - 2; // (1024 -2)
 	int kernelFlagsLength	= strlen(configKernelFlags);
 
@@ -117,12 +114,6 @@ void getAndProcessBootArguments(char * configKernelFlags)
 				printf("X\n");
 				pressedKey |= 4;
 				break;
-#if DEBUG_SWITCH				
-			case 'a': // Debug switch
-				printf("A\n");
-				debugSwitch = 1;
-				break;
-#endif
 		}
     }
 
@@ -166,18 +157,6 @@ void getAndProcessBootArguments(char * configKernelFlags)
 		argP[kernelFlagsLength++] = ' ';
 		cntRemaining -= kernelFlagsLength;
 	}
-	
-#if DEBUG_SWITCH
-	const char * debugString = DEBUG_SWITCH_DATA;
-	int debugSwitchLength = strlen(debugString);
-	
-	if(debugSwitch)
-	{
-		strncpy(&argP[kernelFlagsLength], debugString, debugSwitchLength);
-		argP[debugSwitchLength++ + kernelFlagsLength++] = ' ';
-		cntRemaining -= debugSwitchLength;
-	}
-#endif
 
 	int bootArgsLength = strlen(cp);
     
@@ -193,13 +172,8 @@ void getAndProcessBootArguments(char * configKernelFlags)
 	}
 
 	// Store boot args.
-#if DEBUG_SWITCH	
-	strncpy(&argP[kernelFlagsLength + debugSwitchLength], cp, bootArgsLength); 
-	argP[kernelFlagsLength + debugSwitchLength + bootArgsLength] = '\0';
-#else
-	strncpy(&argP[kernelFlagsLength], cp, bootArgsLength); 
+	strncpy(&argP[kernelFlagsLength], cp, bootArgsLength);
 	argP[kernelFlagsLength + bootArgsLength] = '\0';
-#endif
 
 	if (configKernelFlags)
 	{
