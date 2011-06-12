@@ -1,3 +1,12 @@
+RevoBoot v1.0.18
+================
+- Fixed a number of bugs.
+- Made ssdt_pr_generator.h more robust.
+- VERSION info updated.
+
+Note: Thanks to STLVNUB, blackosx and flAked for reporting bugs (via issues). Keep up the good work!
+
+
 RevoBoot v1.0.17
 ================
 - Fixed a bug in i386/libsaio/cpu.c (if clause that failed to work).
