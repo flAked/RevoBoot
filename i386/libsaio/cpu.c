@@ -5,6 +5,7 @@
  * Expanded (requestMaxTurbo added) by DHP in May 2011.
  * Simplified by DHP in Juni 2011 (thanks to MC and flAked for the idea).
  * Code copied from Intel/dynamic_data.h  by DHP in juni 2011.
+ * New compiler directive (BOOT_TURBO_RATIO) added by Jeroen (June 2011).
  */
 
 
@@ -73,11 +74,16 @@ void initTurboRatios()
 	}
 	
 	// Are all core ratios set to the same value?
-	if (gPlatform.CPU.CoreTurboRatio[0] == gPlatform.CPU.CoreTurboRatio[1] == 
-		gPlatform.CPU.CoreTurboRatio[2] == gPlatform.CPU.CoreTurboRatio[3])
+	//
+	// DHP: This should follow the same route as what I did for ssdt_pr_generator.h 
+	//		i.e. don't assume that all installations have 4 cores (think scalable).
+	//
+	if ((gPlatform.CPU.CoreTurboRatio[0] == gPlatform.CPU.CoreTurboRatio[1]) &&
+		(gPlatform.CPU.CoreTurboRatio[1] == gPlatform.CPU.CoreTurboRatio[2]) &&
+		(gPlatform.CPU.CoreTurboRatio[2] == gPlatform.CPU.CoreTurboRatio[3]))
 	{
-		// Yes. We only need one so let's just wipe the rest.
-		gPlatform.CPU.CoreTurboRatio[1] = gPlatform.CPU.CoreTurboRatio[2] = gPlatform.CPU.CoreTurboRatio[3] = 0;
+		// Yes. We only need one so wipe the rest (keeping the one for max cores).
+		gPlatform.CPU.CoreTurboRatio[0] = gPlatform.CPU.CoreTurboRatio[1] = gPlatform.CPU.CoreTurboRatio[2] = 0;
 	}
 #else
 	gPlatform.CPU.CoreTurboRatio[0] = bitfield32(msr, 7, 0);
@@ -107,8 +113,11 @@ void requestMaxTurbo(uint8_t aMaxMultiplier)
 	if (gPlatform.CPU.CoreTurboRatio[0] > aMaxMultiplier) // 0x26 (3.8GHz) > 0x22 (3.4GHz)
 	{
 		// No. Request maximum turbo boost (in case EIST is disabled).
-		wrmsr64(MSR_IA32_PERF_CONTROL, (gPlatform.CPU.CoreTurboRatio[0] << 8)); // 0x26 -> 0x2600 (for 3.8GHz)
-		
+		wrmsr64(MSR_IA32_PERF_CONTROL, BOOT_TURBO_RATIO || (gPlatform.CPU.CoreTurboRatio[0] << 8)); // Example: 0x26 -> 0x2600 (for 3.8GHz)
+
+		// Note: The above compiler directive was added, on request, to trigger the required 
+		//		 boot turbo multiplier (SB 'iMac' running at 5.4+ GHz did not want to boot).
+
 		_CPU_DEBUG_DUMP("Maximum (%d00) turbo boost requested.\n", gPlatform.CPU.CoreTurboRatio[0]);
 	}
 }
