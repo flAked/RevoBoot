@@ -361,7 +361,7 @@ void boot(int biosdev)
 			
 			if ((hibSleeptime + 3) < bvr->modTime) {
 #if DEBUG_BOOT
-				printf ("Hibernate image is too old by %d seconds. Use ForceWake=y to override\n", bvr->modTime - hibSleeptime);
+				printf ("Hibernate image is too old by %d seconds.\n", bvr->modTime - hibSleeptime);
 #endif
 				break;
 			}

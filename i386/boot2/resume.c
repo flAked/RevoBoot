@@ -8,6 +8,8 @@
  *  - small fixups by flAked, 2011
  */
 
+
+
 #include "saio_internal.h"
 #include "libsa.h"
 #include "IOHibernatePrivate.h"
@@ -15,6 +17,8 @@
 #include "bootstruct.h"
 #include "boot.h"
 #include "pci.h"
+
+#if HIBERNATE_SUPPORT
 
 /*extern int previewTotalSectors;
 extern int previewLoadedSectors;
@@ -149,7 +153,7 @@ void HibernateBoot(char *image_filename)
 	imageSize -= sizeof(IOHibernateImageHeader);
 	buffer = (long)(header + 1);
 	
-/*	if (header->previewSize)
+	/*if (header->previewSize)
 	{
 		uint64_t preview_offset = header->fileExtentMapSize - sizeof(header->fileExtentMap) + codeSize;
 		uint8_t progressSaveUnder[kIOHibernateProgressCount][kIOHibernateProgressSaveUnderSize];
@@ -166,18 +170,11 @@ void HibernateBoot(char *image_filename)
 		previewTotalSectors = 0;
 		previewLoadedSectors = 0;
 		previewSaveunder = 0;
-#if 0
-		AsereBLN:
-		check_vga_nvidia() didn't work as expected (recursion level > 0 & return value).
-		Unforutnaltely I cannot find a note why to switch back to text mode for nVidia cards only
-		and because it check_vga_nvidia does not work (cards normally are behind a bridge) I will
-		remove it completely
-		setVideoMode( VGA_TEXT_MODE, 0 );
-#endif
 	}
 	else*/
 		ReadFileAtOffset (image_filename, (char *)buffer, sizeof(IOHibernateImageHeader), imageSize);
 	
-
 	WakeKernel(header);
 }
+
+#endif
