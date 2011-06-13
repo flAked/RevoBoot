@@ -42,12 +42,12 @@ VPATH = $(OBJROOT):$(SYMROOT)
 # The ordering is important;
 #	
 
-OBJS = boot2.o boot.o bootlogo.o graphics.o drivers.o options.o lzss.o
+OBJS = boot2.o boot.o bootlogo.o graphics.o drivers.o options.o lzss.o resume.o
 
 UTILDIR = ../util
 SFILES = boot2.s
-CFILES = boot.c bootlogo.c graphics.c drivers.c options.c
-HFILES = boot.h bootlogo.h 
+CFILES = boot.c bootlogo.c graphics.c drivers.c options.c resume.o
+HFILES = boot.h bootlogo.h IOHibernatePrivate.h
 
 OTHERFILES = Makefile
 ALLSRC = $(FOREIGNSRC) $(FOREIGNBIN) $(SFILES) $(CFILES) $(HFILES) $(OTHERFILES)

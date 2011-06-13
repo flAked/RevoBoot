@@ -335,11 +335,41 @@ void boot(int biosdev)
         gErrors        = 0;
 
 		int retStatus = -1;
+		long hibSleeptime, hibFlags;
 
 		getAndProcessBootArguments(kernelFlags);
 
 		// Initialize bootFile (defaults to: mach_kernel).
 		strcpy(bootFile, bootInfo->bootFile);
+		
+#if HIBERNATE_SUPPORT
+		// Wake up from hibernation
+		// based on Chameleon code
+		while (1) {
+			const char *tmp, *path;
+			BVRef bvr;
+			path = "/private/var/vm/sleepimage";
+			
+			// Do this first to be sure that root volume is mounted
+			retStatus = GetFileInfo(0, path, &hibFlags, &hibSleeptime);
+
+			if ((bvr = getBootVolumeRef(path, &tmp)) == NULL)
+				break;
+			
+			if ((retStatus != 0) || ((hibFlags & kFileTypeMask) != kFileTypeFlat))
+				break;
+			
+			if ((hibSleeptime + 3) < bvr->modTime) {
+#if DEBUG_BOOT
+				printf ("Hibernate image is too old by %d seconds. Use ForceWake=y to override\n", bvr->modTime - hibSleeptime);
+#endif
+				break;
+			}
+				
+			HibernateBoot((char *)val);
+			break;
+		}
+#endif
 
 #if PRE_LINKED_KERNEL_SUPPORT
 
