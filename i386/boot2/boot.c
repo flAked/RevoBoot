@@ -335,7 +335,6 @@ void boot(int biosdev)
         gErrors        = 0;
 
 		int retStatus = -1;
-		long hibSleeptime, hibFlags;
 
 		getAndProcessBootArguments(kernelFlags);
 
@@ -345,6 +344,8 @@ void boot(int biosdev)
 #if HIBERNATE_SUPPORT
 		// Wake up from hibernation
 		// based on Chameleon code
+		long hibSleeptime, hibFlags;
+		
 		while (1) {
 			const char *tmp, *path;
 			BVRef bvr;

@@ -147,6 +147,8 @@
 
 #define PRE_LINKED_KERNEL_SUPPORT			1	// Set to 1 by default. Change this to 0 to disable the use of pre-linked kernels.
 
+#define HIBERNATE_SUPPORT					1	// Set to 1 by default. Change this to 0 if you don't want hibernation support.
+
 #define MUST_ENABLE_A20						0	// Set to 0 by default. Change this to 1 when your hardware requires it.
 
 #define SAFE_MALLOC							0	// Set to 0 by default. Change this to 1 when booting halts with a memory allocation error.
