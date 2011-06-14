@@ -46,7 +46,7 @@ OBJS = boot2.o boot.o bootlogo.o graphics.o drivers.o options.o lzss.o resume.o
 
 UTILDIR = ../util
 SFILES = boot2.s
-CFILES = boot.c bootlogo.c graphics.c drivers.c options.c resume.o
+CFILES = boot.c bootlogo.c graphics.c drivers.c options.c resume.c
 HFILES = boot.h bootlogo.h IOHibernatePrivate.h
 
 OTHERFILES = Makefile
